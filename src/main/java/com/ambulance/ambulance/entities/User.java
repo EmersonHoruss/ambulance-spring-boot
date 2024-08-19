@@ -3,8 +3,8 @@ package com.ambulance.ambulance.entities;
 import com.ambulance.ambulance.DTOs.entities.user.UserShowDTO;
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.LocalDate;
 
+@SuppressWarnings("rawtypes")
 @Entity
 @Table(name = "user")
 @Getter
@@ -23,7 +23,7 @@ public class User extends BaseEntity {
     private String roles;
 
     @Override
-    public UserShowDTO asShowDTO(){
+    public UserShowDTO asShowDTO() {
         UserShowDTO userShowDTO = new UserShowDTO();
         userShowDTO.setId(this.getId());
         userShowDTO.setActivated(this.getActivated());

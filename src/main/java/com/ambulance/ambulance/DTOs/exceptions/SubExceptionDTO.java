@@ -9,7 +9,7 @@ public class SubExceptionDTO {
     private String field;
     private String message;
 
-    public SubExceptionDTO(ObjectError objectError){
+    public SubExceptionDTO(ObjectError objectError) {
         this.field = ((FieldError) objectError).getField();
         this.message = objectError.getDefaultMessage();
     }

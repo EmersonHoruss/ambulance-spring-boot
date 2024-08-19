@@ -4,13 +4,10 @@ import com.ambulance.ambulance.DTOs.entities.BaseUpdateDTO;
 import com.ambulance.ambulance.entities.*;
 import lombok.Getter;
 import lombok.Setter;
-import jakarta.validation.constraints.*;
-import org.springframework.lang.Nullable;
-import java.time.LocalDate;
 
 @Getter
 @Setter
-public class UserUpdateDTO extends BaseUpdateDTO<User>{
+public class UserUpdateDTO extends BaseUpdateDTO<User> {
     private String name;
     private String email;
     private String password;

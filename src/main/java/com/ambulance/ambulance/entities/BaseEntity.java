@@ -11,6 +11,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@SuppressWarnings("rawtypes")
 public abstract class BaseEntity<ShowDTO extends BaseShowDTO> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,8 +21,8 @@ public abstract class BaseEntity<ShowDTO extends BaseShowDTO> {
     private Boolean activated;
 
     @PrePersist
-    private void prePersist(){
-        if(activated == null){
+    private void prePersist() {
+        if (activated == null) {
             activated = true;
         }
     }

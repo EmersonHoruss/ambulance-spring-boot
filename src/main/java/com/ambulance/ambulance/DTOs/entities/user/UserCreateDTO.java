@@ -4,9 +4,6 @@ import com.ambulance.ambulance.DTOs.entities.BaseCreateDTO;
 import com.ambulance.ambulance.entities.*;
 import lombok.Getter;
 import lombok.Setter;
-import jakarta.validation.constraints.*;
-import org.springframework.lang.Nullable;
-import java.time.LocalDate;
 
 @Getter
 @Setter

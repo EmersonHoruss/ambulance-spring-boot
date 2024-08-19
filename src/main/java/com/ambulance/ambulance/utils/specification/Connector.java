@@ -19,7 +19,7 @@ public class Connector {
         return connector.equals("not");
     }
 
-    public String getConnector(){
+    public String getConnector() {
         return this.connector;
     }
 

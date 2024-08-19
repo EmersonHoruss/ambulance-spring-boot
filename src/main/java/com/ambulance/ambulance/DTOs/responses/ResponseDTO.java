@@ -5,9 +5,10 @@ import lombok.Getter;
 import org.springframework.data.domain.Page;
 
 @Getter
+@SuppressWarnings("rawtypes")
 public class ResponseDTO {
     private Object content;
-    
+
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private PageableDTO pageable;
 
@@ -17,20 +18,20 @@ public class ResponseDTO {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String query;
 
-    public ResponseDTO(Object content, Page page, String query){
+    public ResponseDTO(Object content, Page page, String query) {
         this.content = content;
-        if(page != null) {
+        if (page != null) {
             this.pageable = new PageableDTO(page);
             this.sort = new SortDTO(page);
         }
-        if(query == null) {
+        if (query == null) {
             this.query = "";
         } else {
             this.query = query;
         }
     }
 
-    public ResponseDTO(Object content){
+    public ResponseDTO(Object content) {
         this.content = content;
     }
 }

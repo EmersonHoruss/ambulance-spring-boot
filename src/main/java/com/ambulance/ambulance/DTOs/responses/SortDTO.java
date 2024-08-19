@@ -11,13 +11,14 @@ import java.util.List;
 import java.util.ArrayList;
 
 @Getter
+@SuppressWarnings("rawtypes")
 public class SortDTO {
     private List<OrderDTO> orders;
 
-    public SortDTO(Page page){
+    public SortDTO(Page page) {
         Iterator<Sort.Order> iterator = page.getSort().iterator();
         this.orders = new ArrayList<>();
-        while(iterator.hasNext()){
+        while (iterator.hasNext()) {
             Sort.Order order = iterator.next();
             String property = order.getProperty();
             String direction = order.getDirection().name();

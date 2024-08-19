@@ -10,6 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @ToString
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class Predicate {
     private String attribute;
     private String operator;
@@ -23,7 +24,7 @@ public class Predicate {
     public Predicate(String query, Integer startIndex, Integer endIndex, Root root, CriteriaBuilder cb) {
         Pattern pattern = Pattern.compile("([\\w.]+)<(\\w+)>([\\w,]+)", Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(query);
-        if(matcher.find()) {
+        if (matcher.find()) {
             this.attribute = matcher.group(1);
             this.operator = matcher.group(2);
             this.values = matcher.group(3);
@@ -40,7 +41,7 @@ public class Predicate {
         this.predicate = predicate.getJavaxPredicate().not();
     }
 
-    public Predicate(Predicate predicate1, Predicate predicate2, Connector connector, CriteriaBuilder cb){
+    public Predicate(Predicate predicate1, Predicate predicate2, Connector connector, CriteriaBuilder cb) {
         this.startIndex = predicate1.getStartIndex();
         this.endIndex = predicate2.getEndIndex();
 
@@ -60,7 +61,7 @@ public class Predicate {
         jakarta.persistence.criteria.Predicate predicate = null;
         Path attribute = getAttribute(root);
 
-        switch (this.operator){
+        switch (this.operator) {
             case "eq":
                 predicate = cb.equal(attribute, this.getValue());
                 break;
@@ -88,15 +89,12 @@ public class Predicate {
             case "le":
                 predicate = cb.lessThanOrEqualTo(attribute, this.getValue());
                 break;
-            case "in":
-                predicate = attribute.in(this.getValues());
-                break;
         }
         return predicate;
     }
 
     private Path getAttribute(Root root) {
-        if(this.containsNestedEntities()){
+        if (this.containsNestedEntities()) {
             String[] nestedEntitiesAndAttribute = this.getNestedEntitiesAndAttribute();
 
             String firstNestedEntity = nestedEntitiesAndAttribute[0];
@@ -135,27 +133,27 @@ public class Predicate {
         return this.predicate;
     }
 
-    public Integer getEndIndex(){
+    public Integer getEndIndex() {
         return endIndex;
     }
 
-    public Integer getStartIndex(){
+    public Integer getStartIndex() {
         return startIndex;
     }
 
-    public void setEndIndex(Integer endIndex){
+    public void setEndIndex(Integer endIndex) {
         this.endIndex = endIndex;
     }
 
-    public void setStartIndex(Integer startIndex){
+    public void setStartIndex(Integer startIndex) {
         this.startIndex = startIndex;
     }
 
-    public boolean isEndIndex(Integer endIndex){
+    public boolean isEndIndex(Integer endIndex) {
         return this.endIndex == endIndex;
     }
 
-    public boolean isStartIndex(Integer startIndex){
+    public boolean isStartIndex(Integer startIndex) {
         return this.startIndex == startIndex;
     }
 }

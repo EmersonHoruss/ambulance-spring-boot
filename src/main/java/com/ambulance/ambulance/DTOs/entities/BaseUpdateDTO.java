@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
+@SuppressWarnings("rawtypes")
 @Getter
 @Setter
 public abstract class BaseUpdateDTO<E extends BaseEntity> implements BaseDTO<E> {

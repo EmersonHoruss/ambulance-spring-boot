@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.List;
 
 @ToString
+@SuppressWarnings("rawtypes")
 public class Group {
     private String query;
 
@@ -51,7 +52,7 @@ public class Group {
     private void convertInPredicateDeep() {
         this.build();
 
-        while(this.thereAreGroups()) {
+        while (this.thereAreGroups()) {
             Group group = this.getGroupOnTheFarLeft();
             group.convertInPredicateDeep();
 
@@ -71,8 +72,8 @@ public class Group {
         int indexStart = this.groups.get(0).getStartIndex();
         int indexGroupOnTheFarLeft = 0;
 
-        for(int i = 0; i<this.groups.size(); i++){
-            if( indexStart < this.groups.get(i).getStartIndex()) {
+        for (int i = 0; i < this.groups.size(); i++) {
+            if (indexStart < this.groups.get(i).getStartIndex()) {
                 indexStart = this.groups.get(i).getStartIndex();
                 indexGroupOnTheFarLeft = i;
             }
@@ -86,7 +87,7 @@ public class Group {
     }
 
     private void convertInPredicate() {
-        while(this.thereAreConnectors()){
+        while (this.thereAreConnectors()) {
             Connector connector = this.getConnectorOnTheFarLeft();
 
             Integer predicateStartIndex = connector.getEndIndex() + 1;
@@ -94,12 +95,12 @@ public class Group {
 
             Predicate predicateResult = null;
 
-            if(connector.isNegation()){
-                predicateResult = new Predicate(predicate2,connector);
-            }else{
+            if (connector.isNegation()) {
+                predicateResult = new Predicate(predicate2, connector);
+            } else {
                 Integer predicateEndIndex = connector.getStartIndex() - 1;
                 Predicate predicate1 = this.getPredicateByEndIndex(predicateEndIndex);
-                predicateResult = new Predicate(predicate1, predicate2, connector,this.cb);
+                predicateResult = new Predicate(predicate1, predicate2, connector, this.cb);
 
                 this.predicates.remove(predicate1);
             }
@@ -117,20 +118,20 @@ public class Group {
         return this.connectors.size() != 0;
     }
 
-    private Predicate getPredicateByStartIndex(Integer startIndex){
-        for (int i = 0; i<predicates.size(); i++){
+    private Predicate getPredicateByStartIndex(Integer startIndex) {
+        for (int i = 0; i < predicates.size(); i++) {
             Predicate predicate = predicates.get(i);
-            if(predicate.isStartIndex(startIndex)){
+            if (predicate.isStartIndex(startIndex)) {
                 return predicate;
             }
         }
         return null;
     }
 
-    private Predicate getPredicateByEndIndex(Integer endIndex){
-        for (int i = 0; i<predicates.size(); i++){
+    private Predicate getPredicateByEndIndex(Integer endIndex) {
+        for (int i = 0; i < predicates.size(); i++) {
             Predicate predicate = predicates.get(i);
-            if(predicate.isEndIndex(endIndex)){
+            if (predicate.isEndIndex(endIndex)) {
                 return predicate;
             }
         }
@@ -141,8 +142,8 @@ public class Group {
         int indexStart = this.connectors.get(0).getStartIndex();
         int indexConnectorOnTheFarLeft = 0;
 
-        for(int i = 0; i<this.connectors.size(); i++){
-            if(this.connectors.get(i).getStartIndex() < indexStart) {
+        for (int i = 0; i < this.connectors.size(); i++) {
+            if (this.connectors.get(i).getStartIndex() < indexStart) {
                 indexStart = this.connectors.get(i).getStartIndex();
                 indexConnectorOnTheFarLeft = i;
             }
@@ -167,17 +168,17 @@ public class Group {
         List<Integer> startIndexes = new ArrayList<Integer>();
         List<Integer> endIndexes = new ArrayList<Integer>();
 
-        for (int i = 0; i < this.query.length(); i++){
-            if(this.query.charAt(i) == '(') {
+        for (int i = 0; i < this.query.length(); i++) {
+            if (this.query.charAt(i) == '(') {
                 groups++;
-                if(groups == 1) {
+                if (groups == 1) {
                     startIndexes.add(i);
                 }
             }
 
-            if(this.query.charAt(i) == ')') {
+            if (this.query.charAt(i) == ')') {
                 groups--;
-                if(groups == 0) {
+                if (groups == 0) {
                     endIndexes.add(i);
                 }
             }
@@ -199,43 +200,45 @@ public class Group {
         List<Integer> startIndexes = new ArrayList<Integer>();
         List<Integer> endIndexes = new ArrayList<Integer>();
 
-        for (int i = 0; i < this.query.length(); i++){
+        for (int i = 0; i < this.query.length(); i++) {
             Integer endIndexOfBusyGroup = getEndIndexOfBusyGroup(i);
 
-            if (endIndexOfBusyGroup != null){
+            if (endIndexOfBusyGroup != null) {
                 i = endIndexOfBusyGroup;
-            }else{
-                if(this.query.charAt(i)== ':' && connectors == 0){
+            } else {
+                if (this.query.charAt(i) == ':' && connectors == 0) {
                     connectors++;
                     startIndexes.add(i);
                     continue;
                 }
 
-                if(this.query.charAt(i)== ':' && connectors == 1){
+                if (this.query.charAt(i) == ':' && connectors == 1) {
                     connectors--;
                     endIndexes.add(i);
                 }
             }
         }
 
-        /*System.out.println("Connectors");
-        System.out.println(startIndexes);
-        System.out.println(endIndexes);*/
+        /*
+         * System.out.println("Connectors");
+         * System.out.println(startIndexes);
+         * System.out.println(endIndexes);
+         */
 
         for (int i = 0; i < startIndexes.size(); i++) {
             Integer startIndex = startIndexes.get(i);
             Integer endIndex = endIndexes.get(i);
 
-            String queryAuxiliar = this.query.substring(startIndex + 1 , endIndex);
+            String queryAuxiliar = this.query.substring(startIndex + 1, endIndex);
 
             Connector myConnector = new Connector(queryAuxiliar, startIndex, endIndex);
             this.connectors.add(myConnector);
         }
     }
 
-    private Integer getEndIndexOfBusyGroup(Integer i){
-        for (Group myGroup: groups) {
-            if(i <= myGroup.getEndIndex() && i >= myGroup.getStartIndex()){
+    private Integer getEndIndexOfBusyGroup(Integer i) {
+        for (Group myGroup : groups) {
+            if (i <= myGroup.getEndIndex() && i >= myGroup.getStartIndex()) {
                 return myGroup.getEndIndex();
             }
         }
@@ -252,12 +255,12 @@ public class Group {
         Integer startIndex = 0;
         Integer endIndex = this.query.length() - 1;
 
-        for (Group myGroup: this.groups) {
+        for (Group myGroup : this.groups) {
             indexes.add(myGroup.getStartIndex());
             indexes.add(myGroup.getEndIndex());
         }
 
-        for (Connector myConnector: this.connectors) {
+        for (Connector myConnector : this.connectors) {
             indexes.add(myConnector.getStartIndex());
             indexes.add(myConnector.getEndIndex());
         }
@@ -266,21 +269,23 @@ public class Group {
 
         Collections.sort(indexes);
 
-        /*System.out.println("Indexes");
-        System.out.println(indexes);*/
+        /*
+         * System.out.println("Indexes");
+         * System.out.println(indexes);
+         */
 
-        for (int i = 0; i < indexes.size(); i = i +2){
+        for (int i = 0; i < indexes.size(); i = i + 2) {
             Integer endIndexAux = indexes.get(i);
-            Integer startIndexAux = indexes.get(i+1);
+            Integer startIndexAux = indexes.get(i + 1);
 
             Integer subtraction = startIndexAux - endIndexAux;
 
-            if(subtraction > 1) {
-                if(endIndexAux != startIndex) {
+            if (subtraction > 1) {
+                if (endIndexAux != startIndex) {
                     endIndexAux = endIndexAux + 1;
                 }
 
-                if(startIndexAux != endIndex) {
+                if (startIndexAux != endIndex) {
                     startIndexAux = startIndexAux - 1;
                 }
 
@@ -289,13 +294,14 @@ public class Group {
             }
         }
 
-        for (int i = 0; i < startIndexes.size(); i++){
+        for (int i = 0; i < startIndexes.size(); i++) {
             Integer startIndexPredicate = startIndexes.get(i);
             Integer endIndexPredicate = endIndexes.get(i);
 
             String queryAuxiliar = this.query.substring(startIndexPredicate, endIndexPredicate + 1);
 
-            Predicate myPredicate = new Predicate(queryAuxiliar, startIndexPredicate, endIndexPredicate, this.root, this.cb);
+            Predicate myPredicate = new Predicate(queryAuxiliar, startIndexPredicate, endIndexPredicate, this.root,
+                    this.cb);
             this.predicates.add(myPredicate);
         }
     }

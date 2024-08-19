@@ -9,6 +9,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
+@SuppressWarnings("rawtypes")
 public class Specification<E extends BaseEntity> implements org.springframework.data.jpa.domain.Specification<E> {
     private String query;
 
@@ -18,7 +19,7 @@ public class Specification<E extends BaseEntity> implements org.springframework.
 
     @Override
     public jakarta.persistence.criteria.Predicate toPredicate(Root<E> root, CriteriaQuery<?> cq, CriteriaBuilder cb) {
-        if (query==null || query.length()==0){
+        if (query == null || query.length() == 0) {
             return cb.and();
         }
         return new Group(this.query, root, cb).getAsJavaxPredicate();
