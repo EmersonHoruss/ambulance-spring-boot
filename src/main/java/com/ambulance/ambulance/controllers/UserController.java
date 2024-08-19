@@ -13,5 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin(origins = "*")
 @RequestMapping(path = "/users")
 public class UserController
-        extends BaseControllerImplementation<User, UserCreateDTO, UserShowDTO, UserUpdateDTO, UserActivatedDTO> {
+                extends
+                BaseControllerImplementation<User, UserCreateDTO, UserShowDTO, UserUpdateDTO, UserActivatedDTO> {
 }
