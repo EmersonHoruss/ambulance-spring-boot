@@ -1,28 +1,34 @@
 package com.ambulance.ambulance.auth.utils;
 
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
+import javax.crypto.spec.SecretKeySpec;
+
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
 
 import java.security.Key;
 
 @Component
 public class JwtUtil {
-    private Key secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256); // Generates a secure random key
+    private static final String SECRET_KEY = "app   ";
+    private Key secretKey = new SecretKeySpec(SECRET_KEY.getBytes(), SignatureAlgorithm.HS256.getJcaName());
 
     public String generateToken(UserDetails userDetails) {
-        return createToken(userDetails.getUsername());
-    }
+        String authorities = userDetails.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(","));
 
-    private String createToken(String subject) {
         return Jwts.builder()
-                .setSubject(subject)
+                .claim("authorities", authorities)
+                .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // 1 hour expiration
                 .signWith(secretKey)
@@ -44,6 +50,11 @@ public class JwtUtil {
 
     private Date extractExpiration(String token) {
         return extractAllClaims(token).getExpiration();
+    }
+
+    public List<String> extractAuthorities(String token) {
+        String authoritiesString = extractAllClaims(token).get("authorities", String.class);
+        return List.of(authoritiesString.split(","));
     }
 
     private Claims extractAllClaims(String token) {

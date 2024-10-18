@@ -27,7 +27,7 @@ public class AuthenticationController {
     private JwtUtil jwtUtil;
 
     @Autowired
-    private CustomUserDetailsService userDetailsService;
+    private CustomUserDetailsService customUserDetailsService;
 
     @PostMapping("/authenticate")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authRequest)
@@ -35,7 +35,7 @@ public class AuthenticationController {
         this.authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
 
-        final UserDetails userDetails = this.userDetailsService.loadUserByUsername(authRequest.getUsername());
+        final UserDetails userDetails = this.customUserDetailsService.loadUserByUsername(authRequest.getUsername());
         final String token = this.jwtUtil.generateToken(userDetails);
 
         return ResponseEntity.ok(new AuthenticationResponse(token));
@@ -47,7 +47,7 @@ public class AuthenticationController {
         String token = request.getHeader("Authorization").substring(7);
         String username = this.jwtUtil.extractUsername(token);
 
-        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+        UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
         if (jwtUtil.validateToken(token, userDetails)) {
             String newToken = jwtUtil.generateToken(userDetails);
             return ResponseEntity.ok(new AuthenticationResponse(newToken));
