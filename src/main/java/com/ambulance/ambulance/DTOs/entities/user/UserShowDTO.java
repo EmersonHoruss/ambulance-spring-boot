@@ -12,6 +12,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserShowDTO extends BaseShowDTO<UserAuth> {
-    private String name;
+    private String email;
     private Set<Role> roles;
 }

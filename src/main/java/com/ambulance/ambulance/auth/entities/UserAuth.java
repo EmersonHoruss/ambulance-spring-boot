@@ -6,6 +6,7 @@ import java.util.Set;
 import com.ambulance.ambulance.DTOs.entities.user.UserShowDTO;
 import com.ambulance.ambulance.entities.BaseEntity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -28,7 +29,11 @@ public class UserAuth extends BaseEntity<UserShowDTO> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String username;
+
+    @Column(unique = true, nullable = false)
+    private String email;
+
+    @Column(nullable = false)
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -37,7 +42,7 @@ public class UserAuth extends BaseEntity<UserShowDTO> {
     public UserShowDTO asShowDTO() {
         UserShowDTO dto = new UserShowDTO();
         dto.setId(this.id);
-        dto.setName(this.username);
+        dto.setEmail(this.email);
         dto.setRoles(this.roles);
 
         return dto;

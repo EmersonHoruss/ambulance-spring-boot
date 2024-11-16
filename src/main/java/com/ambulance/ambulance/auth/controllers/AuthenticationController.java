@@ -33,9 +33,9 @@ public class AuthenticationController {
     public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authRequest)
             throws Exception {
         this.authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
+                new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
 
-        final UserDetails userDetails = this.customUserDetailsService.loadUserByUsername(authRequest.getUsername());
+        final UserDetails userDetails = this.customUserDetailsService.loadUserByUsername(authRequest.getEmail());
         final String token = this.jwtUtil.generateToken(userDetails);
 
         return ResponseEntity.ok(new AuthenticationResponse(token));
@@ -45,9 +45,9 @@ public class AuthenticationController {
     public ResponseEntity<?> refreshToken(HttpServletRequest request) {
         System.out.println(request.getHeader("Authorization"));
         String token = request.getHeader("Authorization").substring(7);
-        String username = this.jwtUtil.extractUsername(token);
+        String email = this.jwtUtil.extractEmail(token);
 
-        UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
+        UserDetails userDetails = customUserDetailsService.loadUserByUsername(email);
         if (jwtUtil.validateToken(token, userDetails)) {
             String newToken = jwtUtil.generateToken(userDetails);
             return ResponseEntity.ok(new AuthenticationResponse(newToken));
