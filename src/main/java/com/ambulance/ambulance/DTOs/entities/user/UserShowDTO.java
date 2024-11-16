@@ -3,15 +3,15 @@ package com.ambulance.ambulance.DTOs.entities.user;
 import java.util.Set;
 
 import com.ambulance.ambulance.DTOs.entities.BaseShowDTO;
-import com.ambulance.ambulance.entities.*;
+import com.ambulance.ambulance.auth.entities.Role;
+import com.ambulance.ambulance.auth.entities.UserAuth;
+
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class UserShowDTO extends BaseShowDTO<User> {
+public class UserShowDTO extends BaseShowDTO<UserAuth> {
     private String name;
-    private String email;
-    private String password;
-    private Set<Role> authorities;
+    private Set<Role> roles;
 }

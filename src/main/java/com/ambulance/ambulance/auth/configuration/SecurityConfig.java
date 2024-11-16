@@ -32,7 +32,7 @@ public class SecurityConfig {
                         .requestMatchers("/driver/**").hasRole("DRIVER")
                         .requestMatchers("/guest/**").hasRole("GUEST")
                         .requestMatchers("/refresh-token").hasAnyRole("ADMIN", "MEDIC", "DRIVER", "GUEST")
-                        .requestMatchers("/authenticate", "/signup").permitAll()
+                        .requestMatchers("/authenticate", "/signup", "/signup-driver").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))

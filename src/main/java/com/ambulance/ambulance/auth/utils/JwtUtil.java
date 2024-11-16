@@ -4,8 +4,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.crypto.spec.SecretKeySpec;
-
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -13,13 +11,13 @@ import org.springframework.stereotype.Component;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 
 import java.security.Key;
 
 @Component
 public class JwtUtil {
-    private static final String SECRET_KEY = "app   ";
-    private Key secretKey = new SecretKeySpec(SECRET_KEY.getBytes(), SignatureAlgorithm.HS256.getJcaName());
+    private Key secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
     public String generateToken(UserDetails userDetails) {
         String authorities = userDetails.getAuthorities().stream()

@@ -40,8 +40,29 @@ public class UserAuthController {
         return ResponseEntity.ok("UserAuth registered as a GUEST");
     }
 
+    @PostMapping("/signup-driver")
+    public ResponseEntity<String> signUp2(@RequestBody UserAuth user) {
+        user.setPassword(this.passwordEncoder.encode(user.getPassword()));
+
+        Role guestRole = this.roleRepository
+                .findByRoleName("ROLE_DRIVER")
+                .orElseGet(() -> this.roleRepository.save(new Role("ROLE_DRIVER")));
+        user.getRoles().add(guestRole);
+
+        this.userRepository.save(user);
+
+        return ResponseEntity.ok("UserAuth registered as a DRIVER");
+    }
+
     @GetMapping("/guest")
     public ResponseEntity<List<UserAuth>> list() {
+        System.out.println("hi world");
+        List<UserAuth> users = this.userRepository.findAll();
+        return ResponseEntity.ok(users);
+    }
+
+    @GetMapping("/driver")
+    public ResponseEntity<List<UserAuth>> listdriver() {
         List<UserAuth> users = this.userRepository.findAll();
         return ResponseEntity.ok(users);
     }

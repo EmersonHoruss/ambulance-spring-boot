@@ -1,18 +1,25 @@
 package com.ambulance.ambulance.services;
 
-import com.ambulance.ambulance.entities.*;
-
-import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-@Service
-public class UserService extends BaseServiceImplementation<User> {
+import com.ambulance.ambulance.auth.entities.UserAuth;
+import com.ambulance.ambulance.repositories.UserRepository;
 
-    @Override
-    @Transactional
-    public User create(User user) {
-        User savedUser = super.create(user);
-        return savedUser;
+@Service
+public class UserService {
+    @Autowired
+    protected UserRepository userRepository;
+
+    public UserAuth get(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("not found"));
     }
 
+    public Page<UserAuth> get(Specification<UserAuth> specification, Pageable pageable) {
+        return userRepository.findAll(specification, pageable);
+    }
 }

@@ -3,6 +3,9 @@ package com.ambulance.ambulance.auth.entities;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.ambulance.ambulance.DTOs.entities.user.UserShowDTO;
+import com.ambulance.ambulance.entities.BaseEntity;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -21,7 +24,7 @@ import lombok.ToString;
 @Setter
 @NoArgsConstructor
 @ToString
-public class UserAuth {
+public class UserAuth extends BaseEntity<UserShowDTO> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,4 +33,13 @@ public class UserAuth {
 
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles = new HashSet<>();
+
+    public UserShowDTO asShowDTO() {
+        UserShowDTO dto = new UserShowDTO();
+        dto.setId(this.id);
+        dto.setName(this.username);
+        dto.setRoles(this.roles);
+
+        return dto;
+    }
 }
