@@ -20,9 +20,9 @@ public class JwtUtil {
     private Key secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
     public String generateToken(UserDetails userDetails) {
-        String authorities = userDetails.getAuthorities().stream()
+        List<String> authorities = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(","));
+                .collect(Collectors.toList());
 
         return Jwts.builder()
                 .claim("authorities", authorities)
